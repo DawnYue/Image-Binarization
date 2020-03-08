@@ -1,20 +1,70 @@
-﻿// Image Binarization.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-
-#include <iostream>
+﻿#include<opencv2/opencv.hpp>
+#include<iostream>
+#include<math.h>
+using namespace cv;
+using namespace std;
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	cv::Mat src_colar = imread("E:\\4.png");
+	std::vector<cv::Mat>channels;
+	Mat  dst;
+	//转换成灰度图像，使原图成为单通道图像,或imread（"",0）;
+	cvtColor(src_colar, dst, CV_BGR2GRAY);
+	//查看图像通道数
+	int c = dst.channels();
+	cout << "=" << endl << c << endl;
+
+	float histgram[256] = { 0 };
+	for (int j = 0; j < dst.rows; j++) {
+		uchar* data = dst.ptr <uchar>(j);
+		for (int i = 0; i < dst.cols; i++) {
+			//data[i] = j;
+			histgram[data[i]] = histgram[data[i]] + 1;
+		}
+	}
+	float total;
+	total = dst.rows*dst.cols;
+	for (int i = 0; i < 256; i++) {
+		histgram[i] = histgram[i] / total;
+		cout << "histgram" << histgram[i] << endl;
+	}
+
+	int hist_h = 400;//直方图的图像的高
+	int hist_w = 512;////直方图的图像的宽
+	Mat histImage(hist_w, hist_h, CV_8UC3, Scalar(0, 0, 0));//绘制直方图显示的图像
+
+	/*draw rectangle
+	cv::Rect rect;
+	rect.x = 0;
+	rect.y = 0;
+	rect.width = 2;
+	for (int i = 0; i < 256; i++) {
+		rect.x = rect.x + 2;
+		rect.height = histgram[i]*28000;
+		rectangle(histImage, rect, CV_RGB(255, 0, 0), 1, 8, 0);
+	}//            */
+
+	//*draw line
+	Point pt1, pt2;
+	pt1.x = 0;
+	pt1.y = 399;
+	pt2.x = 0;
+	pt2.y = 0;
+	for (int i = 0; i < 256; i++) {
+		pt2.y = pt1.y - histgram[i] * 20000;
+
+		pt2.x = pt2.x + 1;
+		pt1.x = pt2.x;
+		line(histImage, pt1, pt2, CV_RGB(255, 0, 0), 1, 8, 0);
+		pt2.x = pt2.x + 1;
+		pt1.x = pt2.x;
+		line(histImage, pt1, pt2, CV_RGB(255, 0, 0), 1, 8, 0);
+
+	}//							*/
+
+
+	imshow("histImage", histImage);
+	waitKey(0);//等待用户按键
+	return 0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
