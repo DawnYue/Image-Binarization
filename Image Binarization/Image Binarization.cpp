@@ -17,12 +17,26 @@ int main()
 
 	float histgram[256] = { 0 };
 	for (int j = 0; j < dst.rows; j++) {
-		uchar* data = dst.ptr <uchar>(j);
+		uchar* row_ptr = dst.ptr <uchar>(j);// 第j行的头指针
 		for (int i = 0; i < dst.cols; i++) {
-			//data[i] = j;
-			histgram[data[i]] = histgram[data[i]] + 1;
+			// 访问位于 x,y 处的像素
+			uchar* data_ptr = &row_ptr[i*dst.channels()]; // data_ptr 指向待访问的像素数据
+			// 输出该像素的每个通道,如果是灰度图就只有一个通道
+			for (int c = 0; c != dst.channels(); c++)
+			{
+				uchar data = data_ptr[c]; // data为I(x,y)第c个通道的值	
+				histgram[data] = histgram[data] + 1;//遍历像素
+			}
 		}
 	}
+	/*   遍历
+	 for (int j = 0; j < dst.rows; j++) {
+		 uchar* data = dst.ptr <uchar>(j);// 第j行的头指针
+		 for (int i = 0; i < dst.cols; i++) {
+			 //data[i] = j;   //I(x,y)像素
+			 histgram[data[i]] = histgram[data[i]] + 1;
+		 }//								   */
+
 	float total;
 	total = dst.rows*dst.cols;
 	for (int i = 0; i < 256; i++) {
