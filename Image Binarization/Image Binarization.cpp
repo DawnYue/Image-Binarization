@@ -3,10 +3,64 @@
 #include<math.h>
 using namespace cv;
 using namespace std;
+#define WINDOW_NAME "【程序窗口】"   
+//全局变量的声明
+int g_nThresholdValue = 100;
+int g_nThresholdType = 3;
+Mat g_srcImage, g_grayImage, g_dstImage;
+//全局函数的声明
+static void ShowHelpText();//输出帮助文字
+void on_Threshold(int, void*);//回调函数
 
+//自定义的阈值回调函数
+void on_Threshold(int, void*)
+{
+	//调用阈值函数
+	threshold(g_grayImage, g_dstImage, g_nThresholdValue, 255, g_nThresholdType);
+
+	//更新效果图
+	imshow(WINDOW_NAME, g_dstImage);
+}
+
+
+static void ShowHelpText()
+{
+	
+	printf("\n\n\t\t\t！\n");
+	cout << "h" << endl;
+}
 int main()
 {
+	ShowHelpText();
 	cv::Mat src_colar = imread("E:\\4.png");
+	cv::Mat g_srcImage = imread("E:\\4.png");
+
+	//原图的灰度图
+	cvtColor(g_srcImage, g_grayImage, COLOR_RGB2GRAY);
+
+	//创建窗口并显示原始图
+	namedWindow(WINDOW_NAME, WINDOW_AUTOSIZE);
+
+	//创建滑动条来控制阈值
+	createTrackbar("模式",
+		WINDOW_NAME, &g_nThresholdType,
+		4, on_Threshold);
+
+	createTrackbar("参数值",
+		WINDOW_NAME, &g_nThresholdValue,
+		255, on_Threshold);
+
+	//阈值回调函数
+	on_Threshold(0, 0);
+
+	//轮询等待用户按键
+	while (1)
+	{
+		int key;
+		key = waitKey(20);
+		if ((char)key == 27) { break; }//如果ESC键按下则退出程序
+	}
+
 	std::vector<cv::Mat>channels;
 	Mat  dst;
 	//转换成灰度图像，使原图成为单通道图像,或imread（"",0）;
