@@ -6,40 +6,22 @@ using namespace std;
 
 int main()
 {  
-	VideoCapture cap(0);
-	double scale=0.5;
-	//0-180肤色
-	double i_minH = 0;
-	double i_maxH = 20;
-	//0-255
-	double i_minS = 43;
-	double i_maxS = 255;
-	//0-255
-	double i_minV = 55;
-	double i_maxV = 255;
+	cv::Mat src = imread("E:\\4.png");
+	Mat srcMat;
+	Mat dstMat1;
+	Mat dstMat2;
+	//原图的灰度图
+	cvtColor(src, srcMat, COLOR_RGB2GRAY);
 
-	while (1)
-	{   
-		Mat frame;
-		Mat hsvMat;
-		Mat detectMat;
+    threshold(srcMat, dstMat1, 100, 255, THRESH_BINARY);//阈值函数
+	adaptiveThreshold(srcMat, dstMat2,255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV,15,0);//区域自适应二值化
 
-		cap >> frame;
-		Size ResImgSiz = Size(frame.cols*scale, frame.rows*scale);
-		Mat rFrame = Mat(ResImgSiz, frame.type());
-		resize(frame, rFrame, ResImgSiz, INTER_LINEAR);
-		
-		threshold(frame, rFrame, 100, 255, THRESH_BINARY);//阈值函数
-		adaptiveThreshold(frame, rFrame,255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV,15,0);//区域自适应二值化
-		
-		cvtColor(rFrame, hsvMat, COLOR_BGR2HSV);
+	imshow("Image", dstMat1);
+	waitKey(0);//等待用户按键
 
-		rFrame.copyTo(detectMat);
-		cv::inRange(hsvMat, Scalar(i_minH, i_minS, i_minV), Scalar(i_maxH, i_maxS, i_maxV), detectMat);
-		imshow("while :in the range", detectMat);
-		imshow("frame", rFrame);
-		waitKey(30);
-	}
+	imshow("Image", dstMat2);
+	waitKey(0);//等待用户按键
 
+	return 0;
 
 }
