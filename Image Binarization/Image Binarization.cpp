@@ -28,6 +28,8 @@ int main()
 		Size ResImgSiz = Size(frame.cols*scale, frame.rows*scale);
 		Mat rFrame = Mat(ResImgSiz, frame.type());
 		resize(frame, rFrame, ResImgSiz, INTER_LINEAR);
+		
+		threshold(frame, rFrame, 100, 255, THRESH_BINARY);//阈值函数
 
 		cvtColor(rFrame, hsvMat, COLOR_BGR2HSV);
 
