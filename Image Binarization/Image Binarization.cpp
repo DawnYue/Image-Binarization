@@ -17,7 +17,6 @@ void on_Threshold(int, void*)
 {
 	//调用阈值函数
 	threshold(g_grayImage, g_dstImage, g_nThresholdValue, 255, g_nThresholdType);
-
 	//更新效果图
 	imshow(WINDOW_NAME, g_dstImage);
 }
