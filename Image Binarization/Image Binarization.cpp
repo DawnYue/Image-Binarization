@@ -30,7 +30,8 @@ int main()
 		resize(frame, rFrame, ResImgSiz, INTER_LINEAR);
 		
 		threshold(frame, rFrame, 100, 255, THRESH_BINARY);//阈值函数
-
+		adaptiveThreshold(frame, rFrame,255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY_INV,15,0);//区域自适应二值化
+		
 		cvtColor(rFrame, hsvMat, COLOR_BGR2HSV);
 
 		rFrame.copyTo(detectMat);
