@@ -1,11 +1,25 @@
 ﻿#include<opencv2/opencv.hpp>
 #include<iostream>
 #include<math.h>
+
 using namespace cv;
 using namespace std;
 
+
+string window_name = "binaryMat";
 int main()
 {  
+	Mat srcMat;
+	Mat gryMat;
+	int lowTh = 30;
+	int maxTh = 255;
+	cv::Mat srcMat = imread("E:\\4.png");
+
+	//创建滑动条来控制阈值
+	createTrackbar("模式",
+		WINDOW_NAME, &g_nThresholdType,
+		4, on_Threshold);
+
 	VideoCapture cap(0);
 	double scale=0.5;
 	//0-180肤色
