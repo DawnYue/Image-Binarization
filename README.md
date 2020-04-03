@@ -1,5 +1,7 @@
 # Image-Binarization
  opencv简单实践3：肤色检测、二值化函数、回调函数
+ 
+ https://www.bilibili.com/video/BV1UE411c7yA/
 
 练习1
 利用不同的物体在HSV色彩空间上的不同色域，实现目标像素的提取。主要利用iRange函数。
